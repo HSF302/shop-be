@@ -1,39 +1,47 @@
 package com.office_dress_shop.shopbackend.pojo;
 
+import com.office_dress_shop.shopbackend.enums.Role;
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.List;
+
 
 @Entity
 @Table(name = "Accounts")
-public class Account {
+public class Account implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    public int id;
 
     @Column(name = "Email", unique = true, nullable = false)
-    private String email;
+    public String email;
 
     @Column(name = "Password", nullable = false)
-    private String password;
+    public String password;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "Role", nullable = false)
-    private String role;
+    public Role role;
 
     @Column(name = "Name", nullable = false)
-    private String name;
+    public String name;
 
     @Column(name = "Address", nullable = false)
-    private String address;
+    public String address;
 
     @Column(name = "Phone", nullable = false)
-    private String phone;
+    public String phone;
 
     @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
-    private Cart cart;
+    public Cart cart;
 
     public Account() {
     }
 
-    public Account(String email, String password, String role, String name, String address, String phone, Cart cart) {
+    public Account(String email, String password, Role role, String name, String address, String phone, Cart cart) {
         this.email = email;
         this.password = password;
         this.role = role;
@@ -43,7 +51,7 @@ public class Account {
         this.cart = cart;
     }
 
-    public Account(int id, String email, String password, String role, String name, String address, String phone, Cart cart) {
+    public Account(int id, String email, String password, Role role, String name, String address, String phone, Cart cart) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -70,19 +78,29 @@ public class Account {
         this.email = email;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.email;
     }
 
     public void setPassword(String password) {
         this.password = password;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 
