@@ -2,15 +2,20 @@ package com.office_dress_shop.shopbackend.pojo;
 
 import com.office_dress_shop.shopbackend.enums.Role;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
 
 @Entity
 @Table(name = "Accounts")
+@Getter
+@Setter
 public class Account implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,6 +39,13 @@ public class Account implements UserDetails {
 
     @Column(name = "Phone", nullable = false)
     public String phone;
+
+    @Column(name = "ResetToken")
+    public String resetToken;
+
+    @Column(name = "reset_code_expiry")
+    private LocalDateTime resetCodeExpiry;
+
 
     @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
     public Cart cart;
