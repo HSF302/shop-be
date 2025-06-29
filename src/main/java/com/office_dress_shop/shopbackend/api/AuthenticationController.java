@@ -32,7 +32,7 @@ public class AuthenticationController {
         }
         session.setAttribute("USER_EMAIL", account.getEmail());
         session.setAttribute("USER_ID", account.getId());
-        session.setAttribute("USER_ROLE", account.getRole());
+        session.setAttribute("USER_ROLE", account.getRole().toString());
         return "redirect:/home";
     }
 
