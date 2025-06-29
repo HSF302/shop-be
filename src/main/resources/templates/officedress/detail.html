@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Chi tiết Đầm Công Sở</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+<h2>Chi tiết Đầm Công Sở</h2>
+<p><strong>ID:</strong> <span th:text="${officeDress.id}"></span></p>
+<p><strong>Mô tả:</strong> <span th:text="${officeDress.description}"></span></p>
+<p><strong>Giá cơ bản:</strong> <span th:text="${officeDress.basePrice}"></span></p>
+<p><strong>Trạng thái:</strong> <span th:text="${officeDress.status ? 'Hoạt động' : 'Không hoạt động'}"></span></p>
+<p><strong>URL hình ảnh:</strong> <span th:text="${officeDress.imageUrl}"></span></p>
+<p><strong>Số lượng:</strong> <span th:text="${officeDress.quantity}"></span></p>
+<p><strong>Danh mục:</strong> <span th:text="${officeDress.category.name}"></span></p>
+<p><strong>Kích thước:</strong> <span th:text="${officeDress.size.name}"></span></p>
+<p><strong>Màu sắc:</strong> <span th:text="${officeDress.color.name}"></span></p>
+<p><strong>Chất liệu:</strong> <span th:text="${officeDress.material.name}"></span></p>
+<p><strong>Phụ kiện:</strong> <span th:text="${officeDress.addon.name}"></span></p>
+<a th:href="@{/officedresses}">Quay lại danh sách</a>
+</body>
+</html>
