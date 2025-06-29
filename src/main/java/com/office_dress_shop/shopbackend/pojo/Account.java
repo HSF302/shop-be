@@ -50,6 +50,9 @@ public class Account implements UserDetails {
     @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
     public Cart cart;
 
+    @Column(name = "is_actived")
+    private Boolean isActived = true;
+
     public Account() {
     }
 

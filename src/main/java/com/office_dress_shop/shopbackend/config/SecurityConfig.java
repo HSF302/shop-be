@@ -26,19 +26,20 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
-                        .loginPage("/login") // Chỉ ra trang login custom của bạn
+                        .loginPage("/login") // Trang login custom
                         .defaultSuccessUrl("/home", true)
-                        .failureUrl("/login?error=true") // Hiển thị thông báo lỗi
+                        .failureUrl("/login?error=true")
                         .permitAll()
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login") // Redirect về trang login sau khi logout
+                        .logoutSuccessUrl("/login")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
-                ).httpBasic().disable()
-                .formLogin().disable();  // Disable form login mặc định khi bạn tự xử lý đăng nhập
+                )
+                .httpBasic(httpBasic -> httpBasic.disable())      // Cách mới để disable httpBasic
+                .formLogin(form -> form.disable());               // Cách mới để disable formLogin mặc định
+
         return http.build();
     }
 }
-
