@@ -23,7 +23,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public Account authenticate(String email, String password) {
         Account account = authRepository.findAccountByEmail(email);
-        if (account != null && passwordEncoder.matches(password, account.getPassword())) {
+        if (account != null && Boolean.TRUE.equals(account.getIsActived()) && passwordEncoder.matches(password, account.getPassword())) {
             return account;
         }
         return null;
@@ -68,7 +68,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         // Mã hóa mật khẩu trước khi lưu
         account.setPassword(passwordEncoder.encode(account.getPassword()));
         // Gán role mặc định nếu muốn
-        // account.setRole(Role.USER); // nếu có trường Role
         try {
             authRepository.save(account);
             return true;

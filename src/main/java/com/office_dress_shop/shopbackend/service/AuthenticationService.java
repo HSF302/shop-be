@@ -7,7 +7,7 @@ public interface AuthenticationService {
     boolean forgotPassword(String email);
     boolean resetPassword(String token, String newPassword);
     boolean register(Account account);
-    boolean emailExists(String email); // Kiểm tra email trùng
+    boolean emailExists(String email);
 }
 
 
