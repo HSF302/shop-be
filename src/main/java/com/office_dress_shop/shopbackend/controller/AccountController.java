@@ -1,12 +1,11 @@
-package com.office_dress_shop.shopbackend.api;
+package com.office_dress_shop.shopbackend.controller;
 
-import com.office_dress_shop.shopbackend.dto.*;
-import com.office_dress_shop.shopbackend.exception.AuthenticationException;
+import com.office_dress_shop.shopbackend.enums.Role;
 import com.office_dress_shop.shopbackend.pojo.Account;
 import com.office_dress_shop.shopbackend.service.AuthenticationService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,20 +22,21 @@ public class AccountController {
     }
 
     @PostMapping("/login")
-    public String login(
-            @RequestParam String email,
-            @RequestParam String password,
-            HttpSession session,
-            Model model) {
+    public String login(@RequestParam String email,
+                        @RequestParam String password,
+                        HttpSession session,
+                        HttpServletResponse response,
+                        Model model) {
         Account account = authenticationService.authenticate(email, password);
-        if (account == null) {
-            model.addAttribute("error", "Sai tài khoản hoặc mật khẩu!");
-            return "login";
+        if (account != null) {
+            session.setMaxInactiveInterval(30 * 60); // 30 minutes session timeout
+            session.setAttribute("account", account);
+            response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+            return "redirect:/home";
         }
-        session.setAttribute("USER_EMAIL", account.getEmail());
-        session.setAttribute("USER_ID", account.getId());
-        session.setAttribute("USER_ROLE", account.getRole());
-        return "redirect:/home";
+
+        model.addAttribute("error", "Sai tài khoản hoặc mật khẩu!");
+        return "login";
     }
 
     @GetMapping("/logout")
@@ -82,6 +82,7 @@ public class AccountController {
             return "reset-password";
         }
     }
+
     @GetMapping("/register")
     public String registerPage(Model model) {
         model.addAttribute("account", new Account());
@@ -105,19 +106,14 @@ public class AccountController {
             return "register";
         }
     }
-    @GetMapping("/home")
-    public String homePage(HttpSession session, Model model) {
-        String email = (String) session.getAttribute("USER_EMAIL");
-        String role = (String) session.getAttribute("USER_ROLE");
 
-        if (email == null) {
-            return "redirect:/login";  // Nếu chưa đăng nhập, chuyển về trang login
-        }
-
-        model.addAttribute("email", email);
-        model.addAttribute("role", role);
-        return "home";  // Trả về trang home.html
-    }
+@GetMapping("/home")
+public String homePage(HttpSession session, Model model) {
+    Account account = (Account) session.getAttribute("account");
+    model.addAttribute("email", account.getEmail());
+    model.addAttribute("role", account.getRole());
+    return "home";
+}
 
 
 }
