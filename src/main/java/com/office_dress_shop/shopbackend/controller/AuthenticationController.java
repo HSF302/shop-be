@@ -1,6 +1,5 @@
 package com.office_dress_shop.shopbackend.controller;
 
-import com.office_dress_shop.shopbackend.enums.Role;
 import com.office_dress_shop.shopbackend.pojo.Account;
 import com.office_dress_shop.shopbackend.service.AuthenticationService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -11,7 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-public class AccountController {
+@RequestMapping("/auth")
+public class AuthenticationController {
 
     @Autowired
     private AuthenticationService authenticationService;
@@ -32,7 +32,7 @@ public class AccountController {
             session.setMaxInactiveInterval(30 * 60); // 30 minutes session timeout
             session.setAttribute("account", account);
             response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-            return "redirect:/home";
+            return "redirect:/auth/home";
         }
 
         model.addAttribute("error", "Sai tài khoản hoặc mật khẩu!");
@@ -42,7 +42,7 @@ public class AccountController {
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();
-        return "redirect:/login";
+        return "redirect:/auth/login";
     }
 
     @GetMapping("/forgot-password")

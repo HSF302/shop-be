@@ -6,7 +6,7 @@
 </head>
 <body>
 <h2>Đăng ký tài khoản</h2>
-<form th:action="@{/register}" th:object="${account}" method="post">
+<form th:action="@{/auth/register}" th:object="${account}" method="post">
     <label>Email:</label>
     <input type="email" th:field="*{email}" required /><br/><br/>
 
