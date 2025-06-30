@@ -42,7 +42,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         message.setTo(email);
         message.setSubject("Password Reset Request");
         message.setText("Click vào link này để đặt lại mật khẩu: "
-                + "http://localhost:8080/reset-password?token=" + resetToken);
+                + "http://localhost:8080/auth/reset-password?token=" + resetToken);
         mailSender.send(message);
         return true;
     }

@@ -1,4 +1,4 @@
-package com.office_dress_shop.shopbackend.api;
+package com.office_dress_shop.shopbackend.controller;
 
 import com.office_dress_shop.shopbackend.pojo.Account;
 import com.office_dress_shop.shopbackend.service.AccountService;
@@ -22,7 +22,7 @@ public class AccountController {
     public String listAccounts(HttpSession session, Model model) {
         String role = (String) session.getAttribute("USER_ROLE");
         if (role == null || !role.equals("ADMIN")) {
-            return "redirect:/login";
+            return "redirect:/auth/login";
         }
         List<Account> accounts = accountService.getAllAccounts();
         model.addAttribute("accounts", accounts);
