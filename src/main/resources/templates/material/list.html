@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Danh sách Chất liệu</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+<h2>Danh sách Chất liệu</h2>
+<a th:href="@{/materials/add}">+ Thêm Chất liệu</a>
+
+<table border="1" cellpadding="5" cellspacing="0">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Tên</th>
+        <th>Giá</th>
+        <th>Thao tác</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="material : ${materials}">
+        <td th:text="${material.id}"></td>
+        <td th:text="${material.name}"></td>
+        <td th:text="${material.price}"></td>
+        <td>
+            <a th:href="@{/materials/{id}(id=${material.id})}">Xem</a> |
+            <a th:href="@{/materials/edit/{id}(id=${material.id})}">Sửa</a> |
+            <a th:href="@{/materials/delete/{id}(id=${material.id})}" onclick="return confirm('Bạn có chắc muốn xóa?');">Xóa</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
