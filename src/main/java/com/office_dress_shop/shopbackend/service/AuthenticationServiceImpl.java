@@ -40,9 +40,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email);
-        message.setSubject("Password Reset Request");
-        message.setText("Click vào link này để đặt lại mật khẩu: "
-                + "http://localhost:8080/auth/reset-password?token=" + resetToken);
+        message.setSubject("Đặt Lại Mật Khẩu - Office Dress Shop");
+        message.setText("Xin chào,\n\n" +
+                "Chúng tôi nhận được yêu cầu đặt lại mật khẩu cho tài khoản của bạn tại Office Dress Shop.\n\n" +
+                "Vui lòng click vào đường link bên dưới để đặt lại mật khẩu:\n" +
+                "http://localhost:8080/auth/reset-password?token=" + resetToken + "\n\n" +
+                "Lưu ý: Link này sẽ hết hạn sau 1 giờ.\n\n" +
+                "Nếu bạn không yêu cầu đặt lại mật khẩu, vui lòng bỏ qua email này.\n\n" +
+                "Trân trọng,\n" +
+                "Office Dress Shop Team");
         mailSender.send(message);
         return true;
     }
@@ -59,6 +65,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         authRepository.save(account);
         return true;
     }
+
     @Override
     public boolean register(Account account) {
         // Kiểm tra email đã tồn tại chưa
