@@ -19,7 +19,7 @@ public class AuthenticationController {
     @GetMapping("/register")
     public String registerPage(Model model) {
         model.addAttribute("account", new Account());
-        return "register";
+        return "authentication/register";
     }
 
     @PostMapping("/register")
@@ -27,21 +27,21 @@ public class AuthenticationController {
                            Model model) {
         if (authenticationService.emailExists(account.getEmail())) {
             model.addAttribute("error", "Email đã tồn tại!");
-            return "register";
+            return "authentication/register";
         }
         boolean success = authenticationService.register(account);
         if (success) {
             model.addAttribute("message", "Đăng ký thành công! Vui lòng đăng nhập.");
-            return "login";
+            return "authentication/login";
         } else {
             model.addAttribute("error", "Đăng ký thất bại! Vui lòng thử lại.");
-            return "register";
+            return "authentication/register";
         }
     }
 
     @GetMapping("/login")
     public String loginPage() {
-        return "login";
+        return "authentication/login";
     }
 
     @PostMapping("/login")
@@ -59,7 +59,7 @@ public class AuthenticationController {
         }
 
         model.addAttribute("error", "Sai tài khoản hoặc mật khẩu!");
-        return "login";
+        return "authentication/login";
     }
 
 
@@ -71,7 +71,7 @@ public class AuthenticationController {
 
     @GetMapping("/forgot-password")
     public String forgotPasswordPage() {
-        return "forgot-password";
+        return "authentication/forgot-password";
     }
 
     @PostMapping("/forgot-password")
@@ -82,13 +82,13 @@ public class AuthenticationController {
         } else {
             model.addAttribute("error", "Không tìm thấy tài khoản!");
         }
-        return "forgot-password";
+        return "authentication/forgot-password";
     }
 
     @GetMapping("/reset-password")
     public String resetPasswordPage(@RequestParam String token, Model model) {
         model.addAttribute("token", token);
-        return "reset-password";
+        return "authentication/reset-password";
     }
 
     @PostMapping("/reset-password")
@@ -99,11 +99,11 @@ public class AuthenticationController {
         boolean result = authenticationService.resetPassword(token, newPassword);
         if (result) {
             model.addAttribute("message", "Đổi mật khẩu thành công! Vui lòng đăng nhập lại.");
-            return "login";
+            return "authentication/login";
         } else {
             model.addAttribute("error", "Token không hợp lệ hoặc đã hết hạn!");
             model.addAttribute("token", token);
-            return "reset-password";
+            return "authentication/reset-password";
         }
     }
 

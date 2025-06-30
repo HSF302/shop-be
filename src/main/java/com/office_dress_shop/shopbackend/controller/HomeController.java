@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class HomeController {
     @GetMapping
     public String homePage(HttpSession session, Model model) {
+        if (session.getAttribute("account") == null) {
+        return "home";
+        }
         Account account = (Account) session.getAttribute("account");
         model.addAttribute("email", account.getEmail());
         model.addAttribute("role", account.getRole());
