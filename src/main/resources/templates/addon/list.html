@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Danh sách Addon</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+<h2>Danh sách Addon</h2>
+
+<a th:href="@{/addons/add}">+ Thêm Addon</a>
+
+<table border="1" cellpadding="5" cellspacing="0">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Tên</th>
+        <th>Giá</th>
+        <th>Thao tác</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="addon : ${addons}">
+        <td th:text="${addon.id}"></td>
+        <td th:text="${addon.name}"></td>
+        <td th:text="${addon.price}"></td>
+        <td>
+            <a th:href="@{/addons/{id}(id=${addon.id})}">Xem</a> |
+            <a th:href="@{/addons/edit/{id}(id=${addon.id})}">Sửa</a> |
+            <a th:href="@{/addons/delete/{id}(id=${addon.id})}" onclick="return confirm('Bạn có chắc muốn xóa?');">Xóa</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
