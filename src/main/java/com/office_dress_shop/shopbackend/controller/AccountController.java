@@ -17,7 +17,7 @@ public class AccountController {
     @Autowired
     private AccountService accountService;
 
-    // Hiển thị danh sách tài khoản
+    // Hiển thị danh sách tài khoản`
     @GetMapping
     public String listAccounts(HttpSession session, Model model) {
         String role = (String) session.getAttribute("USER_ROLE");

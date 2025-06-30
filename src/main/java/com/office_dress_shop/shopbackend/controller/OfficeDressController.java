@@ -1,4 +1,4 @@
-package com.office_dress_shop.shopbackend.api;
+package com.office_dress_shop.shopbackend.controller;
 
 import com.office_dress_shop.shopbackend.pojo.OfficeDress;
 import com.office_dress_shop.shopbackend.service.*;

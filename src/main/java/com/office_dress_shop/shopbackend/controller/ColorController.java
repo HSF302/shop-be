@@ -1,4 +1,4 @@
-package com.office_dress_shop.shopbackend.api;
+package com.office_dress_shop.shopbackend.controller;
 
 import com.office_dress_shop.shopbackend.pojo.*;
 import com.office_dress_shop.shopbackend.service.*;
@@ -8,52 +8,52 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/sizes")
-public class SizeController {
-    @Autowired private SizeService service;
+@RequestMapping("/colors")
+public class ColorController {
+    @Autowired private ColorService service;
 
     @GetMapping
     public String list(Model model) {
-        model.addAttribute("sizes", service.findAll());
-        return "size/list";
+        model.addAttribute("colors", service.findAll());
+        return "color/list";
     }
 
     @GetMapping("/add")
     public String addForm(Model model) {
-        model.addAttribute("size", new Size());
-        return "size/add";
+        model.addAttribute("color", new Color());
+        return "color/add";
     }
 
     @PostMapping("/add")
-    public String add(@ModelAttribute Size size) {
-        service.save(size);
-        return "redirect:/sizes";
+    public String add(@ModelAttribute Color color) {
+        service.save(color);
+        return "redirect:/colors";
     }
 
     @GetMapping("/edit/{id}")
     public String editForm(@PathVariable int id, Model model) {
         return service.findById(id)
-                .map(s -> { model.addAttribute("size", s); return "size/edit"; })
-                .orElse("redirect:/sizes");
+                .map(c -> { model.addAttribute("color", c); return "color/edit"; })
+                .orElse("redirect:/colors");
     }
 
     @PostMapping("/edit/{id}")
-    public String edit(@PathVariable int id, @ModelAttribute Size size) {
-        size.setId(id);
-        service.save(size);
-        return "redirect:/sizes";
+    public String edit(@PathVariable int id, @ModelAttribute Color color) {
+        color.setId(id);
+        service.save(color);
+        return "redirect:/colors";
     }
 
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable int id) {
         service.deleteById(id);
-        return "redirect:/sizes";
+        return "redirect:/colors";
     }
 
     @GetMapping("/{id}")
     public String detail(@PathVariable int id, Model model) {
         return service.findById(id)
-                .map(s -> { model.addAttribute("size", s); return "size/detail"; })
-                .orElse("redirect:/sizes");
+                .map(c -> { model.addAttribute("color", c); return "color/detail"; })
+                .orElse("redirect:/colors");
     }
 }
