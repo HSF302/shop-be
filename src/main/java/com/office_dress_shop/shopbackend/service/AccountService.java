@@ -6,10 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AccountService {
-    List<Account> getAllAccounts();
-    Optional<Account> getAccountById(int id);
-    Account createAccount(Account account);
-    Account updateAccount(int id, Account account);
-    boolean deleteAccount(int id);
-    Account setActive(int id, boolean isActive);
+    List<Account> findAll();
+    Optional<Account> findById(int id);
+    Account save(Account account);
+    void deleteById(int id);
+    boolean createAccountByAdmin(Account account);
 }

@@ -68,13 +68,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public boolean register(Account account) {
-        // Kiểm tra email đã tồn tại chưa
         if (authRepository.findAccountByEmail(account.getEmail()) != null) {
             return false;
         }
-        // Mã hóa mật khẩu trước khi lưu
         account.setPassword(passwordEncoder.encode(account.getPassword()));
-        // Gán role mặc định nếu muốn
         try {
             authRepository.save(account);
             return true;

@@ -1,14 +1,12 @@
 package com.office_dress_shop.shopbackend.controller;
 
+import com.office_dress_shop.shopbackend.enums.Role;
 import com.office_dress_shop.shopbackend.pojo.Account;
 import com.office_dress_shop.shopbackend.service.AccountService;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/admin/accounts")
@@ -17,88 +15,71 @@ public class AccountController {
     @Autowired
     private AccountService accountService;
 
-    // Hiển thị danh sách tài khoản
-    @GetMapping
-    public String listAccounts(HttpSession session, Model model) {
-        String role = (String) session.getAttribute("USER_ROLE");
-        if (role == null || !role.equals("ADMIN")) {
-            return "redirect:/auth/login";
-        }
-        List<Account> accounts = accountService.getAllAccounts();
-        model.addAttribute("accounts", accounts);
-        return "account-list"; // View hiển thị danh sách tài khoản
+    @GetMapping("/list")
+    public String listAccounts(Model model) {
+        model.addAttribute("accounts", accountService.findAll());
+        return "account/list";
     }
 
-    // Hiển thị form tạo mới tài khoản
     @GetMapping("/create")
-    public String showCreateForm(HttpSession session, Model model) {
-        String role = (String) session.getAttribute("USER_ROLE");
-        if (role == null || !role.equals("ADMIN")) {
-            return "redirect:/login";
-        }
+    public String createAccountPage(Model model) {
         model.addAttribute("account", new Account());
-        return "account-form"; // View form tạo/sửa tài khoản
+        return "account/create";
     }
 
-    // Xử lý tạo mới tài khoản
     @PostMapping("/create")
-    public String createAccount(@ModelAttribute("account") Account account,
-                                HttpSession session, Model model) {
-        String role = (String) session.getAttribute("USER_ROLE");
-        if (role == null || !role.equals("ADMIN")) {
-            return "redirect:/login";
-        }
-        accountService.createAccount(account);
-        return "redirect:/admin/accounts";
+    public String createAccount(
+            @RequestParam String email,
+            @RequestParam String password,
+            @RequestParam String role,   // Nhận trực tiếp là String
+            @RequestParam String name,
+            @RequestParam String address,
+            @RequestParam String phone,
+            Model model
+    ) {
+        Account account = new Account();
+        account.setEmail(email);
+        account.setPassword(password);
+        account.setRole(Role.valueOf(role.trim().toUpperCase())); // Ép thành Enum ở đây
+        account.setName(name);
+        account.setAddress(address);
+        account.setPhone(phone);
+        account.setIsActived(true);
+
+        accountService.save(account);
+
+        model.addAttribute("message", "Tạo tài khoản thành công!");
+        return "redirect:/admin/accounts/list";
     }
 
-    // Hiển thị form cập nhật tài khoản
+
     @GetMapping("/edit/{id}")
-    public String showEditForm(@PathVariable Integer id, HttpSession session, Model model) {
-        String role = (String) session.getAttribute("USER_ROLE");
-        if (role == null || !role.equals("ADMIN")) {
-            return "redirect:/login";
+    public String editAccountPage(@PathVariable int id, Model model) {
+        var account = accountService.findById(id);
+        if (account.isPresent()) {
+            model.addAttribute("account", account.get());
+            return "account/edit";
         }
-        Account account = accountService.getAccountById(id).orElse(null);
-        if (account == null) {
-            return "redirect:/admin/accounts";
-        }
-        model.addAttribute("account", account);
-        return "account-form"; // Sử dụng lại form
+        return "redirect:/admin/accounts/list"; // Nếu không tìm thấy tài khoản
     }
 
-    // Xử lý cập nhật tài khoản
     @PostMapping("/edit/{id}")
-    public String updateAccount(@PathVariable Integer id,
-                                @ModelAttribute("account") Account account,
-                                HttpSession session) {
-        String role = (String) session.getAttribute("USER_ROLE");
-        if (role == null || !role.equals("ADMIN")) {
-            return "redirect:/login";
+    public String editAccount(@PathVariable int id, @ModelAttribute Account account, Model model) {
+        var existingAccount = accountService.findById(id);
+        if (existingAccount.isPresent()) {
+            account.setId(id);
+            accountService.save(account);
+            model.addAttribute("message", "Cập nhật tài khoản thành công!");
+        } else {
+            model.addAttribute("error", "Không tìm thấy tài khoản!");
         }
-        accountService.updateAccount(id, account);
-        return "redirect:/admin/accounts";
+        return "redirect:/admin/accounts/list";
     }
 
-    // "Xóa" tài khoản: chỉ set isActived = false
     @GetMapping("/delete/{id}")
-    public String softDeleteAccount(@PathVariable Integer id, HttpSession session) {
-        String role = (String) session.getAttribute("USER_ROLE");
-        if (role == null || !role.equals("ADMIN")) {
-            return "redirect:/login";
-        }
-        accountService.setActive(id, false);
-        return "redirect:/admin/accounts";
-    }
-
-    // Kích hoạt lại tài khoản (nếu cần)
-    @GetMapping("/activate/{id}")
-    public String activateAccount(@PathVariable Integer id, HttpSession session) {
-        String role = (String) session.getAttribute("USER_ROLE");
-        if (role == null || !role.equals("ADMIN")) {
-            return "redirect:/login";
-        }
-        accountService.setActive(id, true);
-        return "redirect:/admin/accounts";
+    public String deleteAccount(@PathVariable int id, Model model) {
+        accountService.deleteById(id);
+        model.addAttribute("message", "Tài khoản đã bị vô hiệu hóa!");
+        return "redirect:/admin/accounts/list";
     }
 }

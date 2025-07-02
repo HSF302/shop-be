@@ -51,11 +51,19 @@ public class AuthenticationController {
                         HttpSession session,
                         Model model) {
         Account account = authenticationService.authenticate(email, password);
+
         if (account != null) {
-            session.setMaxInactiveInterval(30 * 60); // 30 minutes session timeout
+//            session.setMaxInactiveInterval(30 * 60);
             session.setAttribute("account", account);
-            response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-            return "redirect:/";
+            return "redirect:/home";
+        }
+        System.out.println("Account found in session: " + account.getEmail());
+
+        Account sessionAccount = (Account) session.getAttribute("account");
+        if (sessionAccount == null) {
+            System.out.println("No account found in session.");
+        } else {
+            System.out.println("Account found in session: " + sessionAccount.getEmail());
         }
 
         model.addAttribute("error", "Sai tài khoản hoặc mật khẩu!");
@@ -106,7 +114,5 @@ public class AuthenticationController {
             return "authentication/reset-password";
         }
     }
-
-
 }
 
