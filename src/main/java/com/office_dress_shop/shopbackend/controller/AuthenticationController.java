@@ -55,6 +55,7 @@ public class AuthenticationController {
         if (account != null) {
 //            session.setMaxInactiveInterval(30 * 60);
             session.setAttribute("account", account);
+            session.setAttribute("loggedInUserId", account.getId());
             return "redirect:/home";
         }
         System.out.println("Account found in session: " + account.getEmail());

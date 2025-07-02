@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Thông tin cá nhân</title>
+</head>
+<body>
+<h1>Thông tin cá nhân</h1>
+<p><strong>Tên:</strong> <span th:text="${account.name}"></span></p>
+<p><strong>Email:</strong> <span th:text="${account.email}"></span></p>
+<p><strong>Địa chỉ:</strong> <span th:text="${account.address}"></span></p>
+<p><strong>Số điện thoại:</strong> <span th:text="${account.phone}"></span></p>
+<a th:href="@{/customer/profile/edit}">Cập nhật thông tin</a>
+</body>
+</html>
