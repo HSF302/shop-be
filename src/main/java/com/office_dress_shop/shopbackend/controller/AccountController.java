@@ -3,6 +3,7 @@ package com.office_dress_shop.shopbackend.controller;
 import com.office_dress_shop.shopbackend.enums.Role;
 import com.office_dress_shop.shopbackend.pojo.Account;
 import com.office_dress_shop.shopbackend.service.AccountService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -57,8 +58,11 @@ public class AccountController {
 
 
     @GetMapping("/list/edit/{id}")
-    public String editAccountPage(@PathVariable int id, Model model) {
+    public String editAccountPage(@PathVariable int id, Model model, HttpSession session) {
         var account = accountService.findById(id);
+        Account sessionAccount = (Account) session.getAttribute("account");
+        if (sessionAccount != null && sessionAccount.getId() == id)
+            return "redirect:/profile/edit";
         if (account.isPresent()) {
             model.addAttribute("account", account.get());
             return "account/edit";
@@ -67,7 +71,10 @@ public class AccountController {
     }
 
     @PostMapping("/list/edit/{id}")
-    public String editAccount(@PathVariable int id, @ModelAttribute Account account, Model model) {
+    public String editAccount(@PathVariable int id,
+                             @ModelAttribute Account account,
+                             Model model,
+                             HttpSession session) {
         var existingAccount = accountService.findById(id);
         if (existingAccount.isPresent()) {
             Account old = existingAccount.get();
@@ -82,8 +89,9 @@ public class AccountController {
             if (account.getPassword() != null && !account.getPassword().isBlank()) {
                 old.setPassword(passwordEncoder.encode(account.getPassword()));
             }
-            // Nếu password rỗng thì không update (giữ nguyên)
-            accountService.save(old);
+
+            Account saved = accountService.save(old);
+
             model.addAttribute("message", "Cập nhật tài khoản thành công!");
         } else {
             model.addAttribute("error", "Không tìm thấy tài khoản!");
@@ -92,7 +100,12 @@ public class AccountController {
     }
 
     @GetMapping("/list/delete/{id}")
-    public String deleteAccount(@PathVariable int id, Model model) {
+    public String deleteAccount(@PathVariable int id, Model model, HttpSession session) {
+        Account sessionAccount = (Account) session.getAttribute("account");
+        if (sessionAccount != null && sessionAccount.getId() == id) {
+            model.addAttribute("message", "Bạn không thể tự vô hiệu hóa chính mình");
+            return "redirect:/accounts/list";
+        }
         accountService.deleteById(id);
         model.addAttribute("message", "Tài khoản đã bị vô hiệu hóa!");
         return "redirect:/accounts/list";

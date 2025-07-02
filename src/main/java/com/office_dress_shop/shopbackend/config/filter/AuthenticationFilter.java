@@ -29,11 +29,17 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         Account account = session != null ? (Account) session.getAttribute("account") : null;
 
         if (account == null) {
-            response.sendRedirect("/auth/login");
+            response.sendRedirect("/error");
             return;
         }
 
-        // Phân quyền admin cho /admin/**
+        // Phân quyền customer
+//        if (path.startsWith("/customer/profile") && (account.getRole() == null || !account.getRole().name().equals("CUSTOMER"))) {
+//            response.sendRedirect("/error");
+//            return;
+//        }
+
+        // Phân quyền admin cho
         if (path.startsWith("/accounts/list") && (account.getRole() == null || !account.getRole().name().equals("ADMIN"))) {
             response.sendRedirect("/error");
             return;
