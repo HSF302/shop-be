@@ -54,7 +54,11 @@ public class AuthenticationController {
 
         if (account != null) {
             session.setAttribute("account", account);
+
+            session.setAttribute("loggedInUserId", account.getId());
+
             System.out.println("Account found in session: " + account.getEmail());
+
             return "redirect:/home";
         }
 

@@ -4,6 +4,7 @@ import com.office_dress_shop.shopbackend.enums.Role;
 import com.office_dress_shop.shopbackend.pojo.Account;
 import com.office_dress_shop.shopbackend.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +15,8 @@ public class AccountController {
 
     @Autowired
     private AccountService accountService;
-
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping("/list")
     public String listAccounts(Model model) {
@@ -40,7 +42,7 @@ public class AccountController {
     ) {
         Account account = new Account();
         account.setEmail(email);
-        account.setPassword(password);
+        account.setPassword(passwordEncoder.encode(password));
         account.setRole(Role.valueOf(role.trim().toUpperCase())); // Ép thành Enum ở đây
         account.setName(name);
         account.setAddress(address);
@@ -68,8 +70,20 @@ public class AccountController {
     public String editAccount(@PathVariable int id, @ModelAttribute Account account, Model model) {
         var existingAccount = accountService.findById(id);
         if (existingAccount.isPresent()) {
-            account.setId(id);
-            accountService.save(account);
+            Account old = existingAccount.get();
+            // Cập nhật từng trường từ account gửi lên
+            old.setEmail(account.getEmail());
+            old.setName(account.getName());
+            old.setAddress(account.getAddress());
+            old.setPhone(account.getPhone());
+            old.setRole(account.getRole());
+            old.setIsActived(account.getIsActived());
+            // Xử lý password: nếu nhập mới thì đổi, không nhập thì giữ nguyên
+            if (account.getPassword() != null && !account.getPassword().isBlank()) {
+                old.setPassword(passwordEncoder.encode(account.getPassword()));
+            }
+            // Nếu password rỗng thì không update (giữ nguyên)
+            accountService.save(old);
             model.addAttribute("message", "Cập nhật tài khoản thành công!");
         } else {
             model.addAttribute("error", "Không tìm thấy tài khoản!");
