@@ -14,14 +14,16 @@
             <h3>Chào mừng bạn đến với hệ thống của chúng tôi!</h3>
             <p>Đây là trang chủ của bạn sau khi đăng nhập thành công.</p>
 
-            <!-- Link để truy cập các chức năng khác -->
-            <a th:href="@{/profile}">Xem hồ sơ</a> |
-            <a th:href="@{/auth/logout}">Đăng xuất</a>
+<!--            &lt;!&ndash; Link để truy cập các chức năng khác &ndash;&gt;-->
+<!--            <a th:href="@{/profile}">Xem hồ sơ</a> |-->
+<!--            <a th:href="@{/auth/logout}">Đăng xuất</a>-->
         </div>
+        <a href="/admin/accounts/list" class="btn btn-primary">Quản lý tài khoản (Admin)</a>
+
     </div>
-    <div th:unless="${session.account != null}">
-        <p>Vui lòng đăng nhập để tiếp tục.</p>
-        <a th:href="@{/auth/login}">Đăng nhập</a>
-    </div>
+<!--    <div th:unless="${session.account != null}">-->
+<!--        <p>Vui lòng đăng nhập để tiếp tục.</p>-->
+<!--        <a th:href="@{/auth/login}">Đăng nhập</a>-->
+<!--    </div>-->
 </body>
 </html>

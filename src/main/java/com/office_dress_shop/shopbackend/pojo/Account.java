@@ -4,51 +4,47 @@ import com.office_dress_shop.shopbackend.enums.Role;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
 
 
 @Entity
 @Table(name = "Accounts")
 @Getter
 @Setter
-public class Account implements UserDetails {
+public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public int id;
+    private int id;
 
     @Column(name = "Email", unique = true, nullable = false)
-    public String email;
+    private String email;
 
     @Column(name = "Password", nullable = false)
-    public String password;
+    private String password;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "Role", nullable = false)
-    public Role role;
+    private Role role;
 
     @Column(name = "Name", nullable = false)
-    public String name;
+    private String name;
 
     @Column(name = "Address", nullable = false)
-    public String address;
+    private String address;
 
     @Column(name = "Phone", nullable = false)
-    public String phone;
+    private String phone;
 
     @Column(name = "ResetToken")
-    public String resetToken;
+    private String resetToken;
 
     @Column(name = "reset_code_expiry")
     private LocalDateTime resetCodeExpiry;
 
 
     @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
-    public Cart cart;
+    private Cart cart;
 
     @Column(name = "is_actived")
     private Boolean isActived = true;
@@ -76,7 +72,12 @@ public class Account implements UserDetails {
         this.phone = phone;
         this.cart = cart;
     }
+    public boolean isActived() {return isActived;}
 
+    public boolean setActived(boolean isActived) {
+        this.isActived = isActived;
+        return this.isActived;
+    }
     public int getId() {
         return id;
     }
@@ -93,18 +94,9 @@ public class Account implements UserDetails {
         this.email = email;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
-    }
 
     public String getPassword() {
         return password;
-    }
-
-    @Override
-    public String getUsername() {
-        return this.email;
     }
 
     public void setPassword(String password) {
