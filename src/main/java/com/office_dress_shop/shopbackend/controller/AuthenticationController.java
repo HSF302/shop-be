@@ -53,12 +53,12 @@ public class AuthenticationController {
         Account account = authenticationService.authenticate(email, password);
 
         if (account != null) {
-//            session.setMaxInactiveInterval(30 * 60);
             session.setAttribute("account", account);
+            System.out.println("Account found in session: " + account.getEmail());
             return "redirect:/home";
         }
-        System.out.println("Account found in session: " + account.getEmail());
 
+        // Move session check after successful authentication
         Account sessionAccount = (Account) session.getAttribute("account");
         if (sessionAccount == null) {
             System.out.println("No account found in session.");

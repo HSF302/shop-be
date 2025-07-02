@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>Edit Account</h1>
-<form th:action="@{/admin/accounts/edit/{id}(id=${account.id})}" method="post" th:object="${account}">
+<form th:action="@{/accounts/list/edit/{id}(id=${account.id})}" method="post" th:object="${account}">
   <input type="hidden" th:field="*{id}" />
 
   <label for="email">Email:</label>
@@ -15,10 +15,20 @@
   <label for="password">Password (Leave blank to keep current):</label>
   <input type="password" id="password" th:field="*{password}"><br><br>
 
+  <label for="name">Address:</label>
+  <input type="text" id="name" th:field="*{name}" required><br><br>
+
+  <label for="address">Address:</label>
+  <input type="text" id="address" th:field="*{address}" required><br><br>
+
+  <label for="phone">Address:</label>
+  <input type="text" id="phone" th:field="*{phone}" required><br><br>
+
+
   <label for="role">Role:</label>
   <select id="role" th:field="*{role}">
     <option value="ADMIN">Admin</option>
-    <option value="MEMBER">Member</option>
+    <option value="CUSTOMER">Customer</option>
   </select><br><br>
 
   <label for="isActived">Active:</label>
@@ -29,6 +39,6 @@
 
   <input type="submit" value="Update Account">
 </form>
-<a href="/admin/accounts/list">Back to list</a>
+<a href="/accounts/list">Back to list</a>
 </body>
 </html>

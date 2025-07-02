@@ -34,7 +34,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         }
 
         // Phân quyền admin cho /admin/**
-        if (path.startsWith("/admin/") && (account.getRole() == null || !account.getRole().name().equals("ADMIN"))) {
+        if (path.startsWith("/accounts/list") && (account.getRole() == null || !account.getRole().name().equals("ADMIN"))) {
             response.sendRedirect("/error");
             return;
         }

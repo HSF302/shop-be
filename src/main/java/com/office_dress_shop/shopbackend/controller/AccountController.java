@@ -9,7 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/admin/accounts")
+@RequestMapping("/accounts")
 public class AccountController {
 
     @Autowired
@@ -22,13 +22,13 @@ public class AccountController {
         return "account/list";
     }
 
-    @GetMapping("/create")
+    @GetMapping("/list/create")
     public String createAccountPage(Model model) {
         model.addAttribute("account", new Account());
         return "account/create";
     }
 
-    @PostMapping("/create")
+    @PostMapping("/list/create")
     public String createAccount(
             @RequestParam String email,
             @RequestParam String password,
@@ -50,21 +50,21 @@ public class AccountController {
         accountService.save(account);
 
         model.addAttribute("message", "Tạo tài khoản thành công!");
-        return "redirect:/admin/accounts/list";
+        return "redirect:/accounts/list";
     }
 
 
-    @GetMapping("/edit/{id}")
+    @GetMapping("/list/edit/{id}")
     public String editAccountPage(@PathVariable int id, Model model) {
         var account = accountService.findById(id);
         if (account.isPresent()) {
             model.addAttribute("account", account.get());
             return "account/edit";
         }
-        return "redirect:/admin/accounts/list"; // Nếu không tìm thấy tài khoản
+        return "redirect:/accounts/list"; // Nếu không tìm thấy tài khoản
     }
 
-    @PostMapping("/edit/{id}")
+    @PostMapping("/list/edit/{id}")
     public String editAccount(@PathVariable int id, @ModelAttribute Account account, Model model) {
         var existingAccount = accountService.findById(id);
         if (existingAccount.isPresent()) {
@@ -74,13 +74,13 @@ public class AccountController {
         } else {
             model.addAttribute("error", "Không tìm thấy tài khoản!");
         }
-        return "redirect:/admin/accounts/list";
+        return "redirect:/accounts/list";
     }
 
-    @GetMapping("/delete/{id}")
+    @GetMapping("/list/delete/{id}")
     public String deleteAccount(@PathVariable int id, Model model) {
         accountService.deleteById(id);
         model.addAttribute("message", "Tài khoản đã bị vô hiệu hóa!");
-        return "redirect:/admin/accounts/list";
+        return "redirect:/accounts/list";
     }
 }
