@@ -15,6 +15,7 @@ public class AccountController {
     @Autowired
     private AccountService accountService;
 
+
     @GetMapping("/list")
     public String listAccounts(Model model) {
         model.addAttribute("accounts", accountService.findAll());
