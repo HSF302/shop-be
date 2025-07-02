@@ -10,19 +10,19 @@
 
 <!-- Nút Create -->
 <div class="d-flex justify-content-end mb-3">
-    <a th:href="@{/admin/accounts/create}" class="btn btn-success">
+    <a th:href="@{/accounts/list/create}" class="btn btn-success">
         Create New Account
     </a>
 </div>
 
 <!-- Filter Form -->
-<form th:action="@{/admin/accounts/list}" method="get" class="mb-4">
+<form th:action="@{/accounts/list}" method="get" class="mb-4">
     <div class="row g-3">
         <div class="col-md-3">
             <select name="role" class="form-select">
                 <option value="">All Roles</option>
                 <option value="ADMIN" th:selected="${currentRole == 'ADMIN'}">Admin</option>
-                <option value="MEMBER" th:selected="${currentRole == 'MEMBER'}">Member</option>
+                <option value="CUSTOMER" th:selected="${currentRole == 'CUSTOMER'}">Member</option>
             </select>
         </div>
         <div class="col-md-3">
@@ -63,8 +63,8 @@
             </span>
         </td>
         <td>
-            <a th:href="@{/admin/accounts/edit/{id}(id=${account.id})}" class="btn btn-sm btn-warning">Edit</a>
-            <a th:href="@{/admin/accounts/delete/{id}(id=${account.id})}"
+            <a th:href="@{/accounts/list/edit/{id}(id=${account.id})}" class="btn btn-sm btn-warning">Edit</a>
+            <a th:href="@{/accounts/list/delete/{id}(id=${account.id})}"
                class="btn btn-sm btn-danger"
                onclick="return confirm('Are you sure you want to deactivate this account?')">Deactivate</a>
         </td>
