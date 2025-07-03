@@ -1,22 +1,42 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Chi tiết Đầm Công Sở</title>
     <meta charset="UTF-8">
+    <title>Chi tiết Đầm Công Sở</title>
 </head>
 <body>
 <h2>Chi tiết Đầm Công Sở</h2>
-<p><strong>ID:</strong> <span th:text="${officeDress.id}"></span></p>
+
 <p><strong>Mô tả:</strong> <span th:text="${officeDress.description}"></span></p>
-<p><strong>Giá cơ bản:</strong> <span th:text="${officeDress.basePrice}"></span></p>
-<p><strong>Trạng thái:</strong> <span th:text="${officeDress.status ? 'Hoạt động' : 'Không hoạt động'}"></span></p>
-<p><strong>URL hình ảnh:</strong> <span th:text="${officeDress.imageUrl}"></span></p>
+<p><strong>Giá:</strong> <span th:text="${officeDress.basePrice}"></span></p>
+<p><strong>Trạng thái:</strong> <span th:text="${officeDress.status ? 'Đang bán' : 'Ngưng bán'}"></span></p>
 <p><strong>Số lượng:</strong> <span th:text="${officeDress.quantity}"></span></p>
 <p><strong>Danh mục:</strong> <span th:text="${officeDress.category.name}"></span></p>
-<p><strong>Kích thước:</strong> <span th:text="${officeDress.size.name}"></span></p>
-<p><strong>Màu sắc:</strong> <span th:text="${officeDress.color.name}"></span></p>
-<p><strong>Chất liệu:</strong> <span th:text="${officeDress.material.name}"></span></p>
-<p><strong>Phụ kiện:</strong> <span th:text="${officeDress.addon.name}"></span></p>
-<a th:href="@{/officedresses}">Quay lại danh sách</a>
+
+<p><strong>Kích cỡ:</strong></p>
+<ul>
+    <li th:each="s : ${officeDress.sizes}" th:text="${s.name}"></li>
+</ul>
+
+<p><strong>Màu sắc:</strong></p>
+<ul>
+    <li th:each="c : ${officeDress.colors}" th:text="${c.name}"></li>
+</ul>
+
+<p><strong>Chất liệu:</strong></p>
+<ul>
+    <li th:each="m : ${officeDress.materials}" th:text="${m.name}"></li>
+</ul>
+
+<p><strong>Phụ kiện:</strong></p>
+<ul>
+    <li th:each="a : ${officeDress.addons}" th:text="${a.name}"></li>
+</ul>
+
+<p><strong>Ảnh:</strong><br>
+    <img th:src="@{${officeDress.imageUrl}}" alt="Ảnh sản phẩm" style="max-width: 300px;" />
+</p>
+
+<p><a th:href="@{/officedresses}">Quay lại danh sách</a></p>
 </body>
 </html>

@@ -6,57 +6,68 @@
 </head>
 <body>
 <h2>Thêm Đầm Công Sở</h2>
-<form th:action="@{/officedresses/add}" th:object="${officeDress}" method="post">
+
+<form th:action="@{/officedresses/add}" th:object="${officeDress}" method="post" enctype="multipart/form-data">
     <div>
         <label for="description">Mô tả:</label>
         <input type="text" id="description" th:field="*{description}" required />
     </div>
+
     <div>
         <label for="basePrice">Giá cơ bản:</label>
         <input type="number" step="0.01" id="basePrice" th:field="*{basePrice}" required />
     </div>
+
     <div>
         <label for="status">Trạng thái:</label>
         <input type="checkbox" id="status" th:field="*{status}" />
     </div>
+
     <div>
-        <label for="imageUrl">URL hình ảnh:</label>
-        <input type="text" id="imageUrl" th:field="*{imageUrl}" required />
+        <label for="imageFile">Hình ảnh:</label>
+        <input type="file" id="imageFile" name="imageFile" accept="image/*" required />
     </div>
+
     <div>
         <label for="quantity">Số lượng:</label>
         <input type="number" id="quantity" th:field="*{quantity}" required />
     </div>
+
     <div>
         <label for="category">Danh mục:</label>
         <select id="category" th:field="*{category.id}" required>
             <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
         </select>
     </div>
+
     <div>
-        <label for="size">Kích thước:</label>
-        <select id="size" th:field="*{size.id}" required>
-            <option th:each="size : ${sizes}" th:value="${size.id}" th:text="${size.name}"></option>
+        <label for="sizes">Kích thước:</label>
+        <select id="sizes" multiple th:field="*{sizes}" required>
+            <option th:each="size : ${sizes}" th:value="${size}" th:text="${size.name}"></option>
         </select>
     </div>
+
     <div>
-        <label for="color">Màu sắc:</label>
-        <select id="color" th:field="*{color.id}" required>
-            <option th:each="color : ${colors}" th:value="${color.id}" th:text="${color.name}"></option>
+        <label for="colors">Màu sắc:</label>
+        <select id="colors" multiple th:field="*{colors}" required>
+            <option th:each="color : ${colors}" th:value="${color}" th:text="${color.name}"></option>
         </select>
     </div>
+
     <div>
-        <label for="material">Chất liệu:</label>
-        <select id="material" th:field="*{material.id}" required>
-            <option th:each="material : ${materials}" th:value="${material.id}" th:text="${material.name}"></option>
+        <label for="materials">Chất liệu:</label>
+        <select id="materials" multiple th:field="*{materials}" required>
+            <option th:each="material : ${materials}" th:value="${material}" th:text="${material.name}"></option>
         </select>
     </div>
+
     <div>
-        <label for="addon">Phụ kiện:</label>
-        <select id="addon" th:field="*{addon.id}" required>
-            <option th:each="addon : ${addons}" th:value="${addon.id}" th:text="${addon.name}"></option>
+        <label for="addons">Phụ kiện:</label>
+        <select id="addons" multiple th:field="*{addons}">
+            <option th:each="addon : ${addons}" th:value="${addon}" th:text="${addon.name}"></option>
         </select>
     </div>
+
     <div>
         <button type="submit">Thêm</button>
         <a th:href="@{/officedresses}">Hủy</a>

@@ -3,9 +3,16 @@ package com.office_dress_shop.shopbackend.controller;
 import com.office_dress_shop.shopbackend.pojo.OfficeDress;
 import com.office_dress_shop.shopbackend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Controller
 @RequestMapping("/officedresses")
@@ -21,7 +28,7 @@ public class OfficeDressController {
     @GetMapping
     public String listOfficeDresses(Model model) {
         model.addAttribute("dresses", officeDressService.findAll());
-        return "officedress/list"; // Trả về view: templates/officedress/list.html
+        return "officedress/list";
     }
 
     @GetMapping("/add")
@@ -35,9 +42,18 @@ public class OfficeDressController {
         return "officedress/add";
     }
 
-
     @PostMapping("/add")
-    public String addOfficeDress(@ModelAttribute OfficeDress officeDress) {
+    public String addOfficeDress(@ModelAttribute OfficeDress officeDress,
+                                 @RequestParam("imageFile") MultipartFile imageFile) throws IOException {
+        if (!imageFile.isEmpty()) {
+            String uploadDir = new ClassPathResource("static/images/uploads/").getFile().getAbsolutePath();
+            String fileName = imageFile.getOriginalFilename();
+            Path path = Paths.get(uploadDir, fileName);
+            Files.write(path, imageFile.getBytes());
+
+            officeDress.setImageUrl("/images/uploads/" + fileName);
+        }
+
         officeDressService.save(officeDress);
         return "redirect:/officedresses";
     }
@@ -58,8 +74,20 @@ public class OfficeDressController {
     }
 
     @PostMapping("/edit/{id}")
-    public String updateOfficeDress(@PathVariable int id, @ModelAttribute OfficeDress officeDress) {
+    public String updateOfficeDress(@PathVariable int id,
+                                    @ModelAttribute OfficeDress officeDress,
+                                    @RequestParam(value = "imageFile", required = false) MultipartFile imageFile) throws IOException {
         officeDress.setId(id);
+
+        if (imageFile != null && !imageFile.isEmpty()) {
+            String uploadDir = new ClassPathResource("static/images/uploads/").getFile().getAbsolutePath();
+            String fileName = imageFile.getOriginalFilename();
+            Path path = Paths.get(uploadDir, fileName);
+            Files.write(path, imageFile.getBytes());
+
+            officeDress.setImageUrl("/images/uploads/" + fileName);
+        }
+
         officeDressService.save(officeDress);
         return "redirect:/officedresses";
     }
@@ -75,7 +103,7 @@ public class OfficeDressController {
         return officeDressService.findById(id)
                 .map(dress -> {
                     model.addAttribute("officeDress", dress);
-                    return "officedress/detail"; // Trả về view: templates/officedress/detail.html
+                    return "officedress/detail";
                 })
                 .orElse("redirect:/officedresses");
     }
