@@ -1,7 +1,6 @@
 package com.office_dress_shop.shopbackend.pojo;
 
 import jakarta.persistence.*;
-
 import java.util.List;
 
 @Entity
@@ -33,26 +32,41 @@ public class OfficeDress {
     @JoinColumn(name = "CategoryId")
     private Category category;
 
-    @ManyToOne
-    @JoinColumn(name = "SizeId")
-    private Size size;
+    @ManyToMany
+    @JoinTable(
+            name = "OfficeDress_Sizes",
+            joinColumns = @JoinColumn(name = "office_dress_id"),
+            inverseJoinColumns = @JoinColumn(name = "size_id")
+    )
+    private List<Size> sizes;
 
-    @ManyToOne
-    @JoinColumn(name = "ColorId")
-    private Color color;
+    @ManyToMany
+    @JoinTable(
+            name = "OfficeDress_Colors",
+            joinColumns = @JoinColumn(name = "office_dress_id"),
+            inverseJoinColumns = @JoinColumn(name = "color_id")
+    )
+    private List<Color> colors;
 
-    @ManyToOne
-    @JoinColumn(name = "MaterialId")
-    private Material material;
+    @ManyToMany
+    @JoinTable(
+            name = "OfficeDress_Materials",
+            joinColumns = @JoinColumn(name = "office_dress_id"),
+            inverseJoinColumns = @JoinColumn(name = "material_id")
+    )
+    private List<Material> materials;
 
-    @ManyToOne
-    @JoinColumn(name = "AddonId")
-    private Addon addon;
+    @ManyToMany
+    @JoinTable(
+            name = "OfficeDress_Addons",
+            joinColumns = @JoinColumn(name = "office_dress_id"),
+            inverseJoinColumns = @JoinColumn(name = "addon_id")
+    )
+    private List<Addon> addons;
 
-    public OfficeDress() {
-    }
+    public OfficeDress() {}
 
-    public OfficeDress(String description, Double basePrice, Boolean status, String imageUrl, int quantity, List<CartItem> cartItems, Category category, Size size, Color color, Material material, Addon addon) {
+    public OfficeDress(String description, Double basePrice, Boolean status, String imageUrl, int quantity, List<CartItem> cartItems, Category category, List<Size> sizes, List<Color> colors, List<Material> materials, List<Addon> addons) {
         this.description = description;
         this.basePrice = basePrice;
         this.status = status;
@@ -60,13 +74,13 @@ public class OfficeDress {
         this.quantity = quantity;
         this.cartItems = cartItems;
         this.category = category;
-        this.size = size;
-        this.color = color;
-        this.material = material;
-        this.addon = addon;
+        this.sizes = sizes;
+        this.colors = colors;
+        this.materials = materials;
+        this.addons = addons;
     }
 
-    public OfficeDress(int id, String description, Double basePrice, Boolean status, String imageUrl, int quantity, List<CartItem> cartItems, Category category, Size size, Color color, Material material, Addon addon) {
+    public OfficeDress(int id, String description, Double basePrice, Boolean status, String imageUrl, int quantity, List<CartItem> cartItems, Category category, List<Size> sizes, List<Color> colors, List<Material> materials, List<Addon> addons) {
         this.id = id;
         this.description = description;
         this.basePrice = basePrice;
@@ -75,105 +89,47 @@ public class OfficeDress {
         this.quantity = quantity;
         this.cartItems = cartItems;
         this.category = category;
-        this.size = size;
-        this.color = color;
-        this.material = material;
-        this.addon = addon;
+        this.sizes = sizes;
+        this.colors = colors;
+        this.materials = materials;
+        this.addons = addons;
     }
 
-    public int getId() {
-        return id;
-    }
+    // Getters and setters
 
-    public void setId(int id) {
-        this.id = id;
-    }
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
-    public String getDescription() {
-        return description;
-    }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    public Double getBasePrice() { return basePrice; }
+    public void setBasePrice(Double basePrice) { this.basePrice = basePrice; }
 
-    public Double getBasePrice() {
-        return basePrice;
-    }
+    public Boolean getStatus() { return status; }
+    public void setStatus(Boolean status) { this.status = status; }
 
-    public void setBasePrice(Double basePrice) {
-        this.basePrice = basePrice;
-    }
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 
-    public Boolean getStatus() {
-        return status;
-    }
+    public int getQuantity() { return quantity; }
+    public void setQuantity(int quantity) { this.quantity = quantity; }
 
-    public void setStatus(Boolean status) {
-        this.status = status;
-    }
+    public List<CartItem> getCartItems() { return cartItems; }
+    public void setCartItems(List<CartItem> cartItems) { this.cartItems = cartItems; }
 
-    public String getImageUrl() {
-        return imageUrl;
-    }
+    public Category getCategory() { return category; }
+    public void setCategory(Category category) { this.category = category; }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
+    public List<Size> getSizes() { return sizes; }
+    public void setSizes(List<Size> sizes) { this.sizes = sizes; }
 
-    public int getQuantity() {
-        return quantity;
-    }
+    public List<Color> getColors() { return colors; }
+    public void setColors(List<Color> colors) { this.colors = colors; }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
+    public List<Material> getMaterials() { return materials; }
+    public void setMaterials(List<Material> materials) { this.materials = materials; }
 
-    public List<CartItem> getCartItems() {
-        return cartItems;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
-    public Size getSize() {
-        return size;
-    }
-
-    public void setSize(Size size) {
-        this.size = size;
-    }
-
-    public Color getColor() {
-        return color;
-    }
-
-    public void setColor(Color color) {
-        this.color = color;
-    }
-
-    public Material getMaterial() {
-        return material;
-    }
-
-    public void setMaterial(Material material) {
-        this.material = material;
-    }
-
-    public Addon getAddon() {
-        return addon;
-    }
-
-    public void setAddon(Addon addon) {
-        this.addon = addon;
-    }
-
-    public void setCartItems(List<CartItem> cartItems) {
-        this.cartItems = cartItems;
-    }
+    public List<Addon> getAddons() { return addons; }
+    public void setAddons(List<Addon> addons) { this.addons = addons; }
 }

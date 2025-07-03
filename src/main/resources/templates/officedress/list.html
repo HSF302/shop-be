@@ -1,84 +1,83 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Danh sách Đầm Công Sở</title>
     <meta charset="UTF-8">
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 8px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        .action-links a {
-            margin-right: 5px;
-            text-decoration: none;
-            color: #007bff;
-        }
-        .action-links a:hover {
-            text-decoration: underline;
-        }
-        .add-link {
-            display: inline-block;
-            margin-bottom: 15px;
-            padding: 8px 15px;
-            background-color: #28a745;
-            color: white;
-            text-decoration: none;
-            border-radius: 4px;
-        }
-        .add-link:hover {
-            background-color: #218838;
-        }
-    </style>
+    <title>Danh sách Đầm Công Sở</title>
 </head>
 <body>
 <h2>Danh sách Đầm Công Sở</h2>
-<a th:href="@{/officedresses/add}" class="add-link">+ Thêm Đầm Công Sở</a>
 
-<table border="1" cellpadding="5" cellspacing="0">
+<a th:href="@{/officedresses/add}">Thêm mới</a>
+
+<table border="1">
     <thead>
     <tr>
         <th>ID</th>
         <th>Mô tả</th>
-        <th>Giá cơ bản</th>
+        <th>Giá</th>
+        <th>SL</th>
         <th>Trạng thái</th>
-        <th>URL hình ảnh</th>
-        <th>Số lượng</th>
         <th>Danh mục</th>
-        <th>Kích thước</th>
+        <th>Kích cỡ</th>
         <th>Màu sắc</th>
         <th>Chất liệu</th>
         <th>Phụ kiện</th>
-        <th>Thao tác</th>
+        <th>Ảnh</th>
+        <th>Hành động</th>
     </tr>
     </thead>
     <tbody>
-    <tr th:each="officeDress : ${dresses}">
-        <td th:text="${officeDress.id}"></td>
-        <td th:text="${officeDress.description}"></td>
-        <td th:text="${officeDress.basePrice}"></td>
-        <td th:text="${officeDress.status ? 'Hoạt động' : 'Không hoạt động'}"></td>
-        <td><img th:src="${officeDress.imageUrl}" alt="Dress Image" style="width: 50px; height: auto;"></td>
-        <td th:text="${officeDress.quantity}"></td>
-        <td th:text="${officeDress.category.name}"></td>
-        <td th:text="${officeDress.size.name}"></td>
-        <td th:text="${officeDress.color.name}"></td>
-        <td th:text="${officeDress.material.name}"></td>
-        <td th:text="${officeDress.addon.name}"></td>
-        <td class="action-links">
-            <a th:href="@{/officedresses/{id}(id=${officeDress.id})}">Xem</a> |
-            <a th:href="@{/officedresses/edit/{id}(id=${officeDress.id})}">Sửa</a> |
-            <a th:href="@{/officedresses/delete/{id}(id=${officeDress.id})}" onclick="return confirm('Bạn có chắc muốn xóa đầm công sở này?');">Xóa</a>
+    <tr th:each="d : ${dresses}">
+        <td th:text="${d.id}"></td>
+        <td th:text="${d.description}"></td>
+        <td th:text="${d.basePrice}"></td>
+        <td th:text="${d.quantity}"></td>
+        <td th:text="${d.status ? 'Đang bán' : 'Ngưng bán'}"></td>
+        <td th:text="${d.category.name}"></td>
+
+        <!-- Hiển thị danh sách size -->
+        <td>
+            <ul>
+                <li th:each="s : ${d.sizes}" th:text="${s.name}"></li>
+            </ul>
+        </td>
+
+        <!-- Hiển thị danh sách màu -->
+        <td>
+            <ul>
+                <li th:each="c : ${d.colors}" th:text="${c.name}"></li>
+            </ul>
+        </td>
+
+        <!-- Hiển thị danh sách chất liệu -->
+        <td>
+            <ul>
+                <li th:each="m : ${d.materials}" th:text="${m.name}"></li>
+            </ul>
+        </td>
+
+        <!-- Hiển thị danh sách phụ kiện -->
+        <td>
+            <ul>
+                <li th:each="a : ${d.addons}" th:text="${a.name}"></li>
+            </ul>
+        </td>
+
+        <!-- Ảnh -->
+        <td>
+            <img th:src="@{${d.imageUrl}}" alt="Ảnh" style="max-width: 100px;" />
+        </td>
+
+        <!-- Hành động -->
+        <td>
+            <a th:href="@{'/officedresses/' + ${d.id}}">Chi tiết</a> |
+            <a th:href="@{'/officedresses/edit/' + ${d.id}}">Sửa</a> |
+            <a th:href="@{'/officedresses/delete/' + ${d.id}}"
+               onclick="return confirm('Bạn có chắc chắn muốn xóa?');">Xóa</a>
         </td>
     </tr>
     </tbody>
 </table>
+
 </body>
 </html>
