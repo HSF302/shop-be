@@ -43,16 +43,17 @@ public class OfficeDressController {
     }
 
     @PostMapping("/add")
-    public String addOfficeDress(@ModelAttribute OfficeDress officeDress,
-                                 @RequestParam("imageFile") MultipartFile imageFile) throws IOException {
-        if (!imageFile.isEmpty()) {
-            String uploadDir = new ClassPathResource("static/images/uploads/").getFile().getAbsolutePath();
-            String fileName = imageFile.getOriginalFilename();
-            Path path = Paths.get(uploadDir, fileName);
-            Files.write(path, imageFile.getBytes());
-
-            officeDress.setImageUrl("/images/uploads/" + fileName);
-        }
+    public String addOfficeDress(@ModelAttribute OfficeDress officeDress
+                                 ) throws IOException {
+        officeDress.setImageUrl("hello");
+//        if (!imageFile.isEmpty()) {
+//            String uploadDir = new ClassPathResource("static/images/uploads/").getFile().getAbsolutePath();
+//            String fileName = imageFile.getOriginalFilename();
+//            Path path = Paths.get(uploadDir, fileName);
+//            Files.write(path, imageFile.getBytes());
+//
+//            officeDress.setImageUrl("/images/uploads/" + fileName);
+//        }
 
         officeDressService.save(officeDress);
         return "redirect:/officedresses";

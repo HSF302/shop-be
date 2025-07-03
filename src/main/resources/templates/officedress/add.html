@@ -7,7 +7,7 @@
 <body>
 <h2>Thêm Đầm Công Sở</h2>
 
-<form th:action="@{/officedresses/add}" th:object="${officeDress}" method="post" enctype="multipart/form-data">
+<form th:action="@{/officedresses/add}" th:object="${officeDress}" method="post">
     <div>
         <label for="description">Mô tả:</label>
         <input type="text" id="description" th:field="*{description}" required />
@@ -23,10 +23,10 @@
         <input type="checkbox" id="status" th:field="*{status}" />
     </div>
 
-    <div>
-        <label for="imageFile">Hình ảnh:</label>
-        <input type="file" id="imageFile" name="imageFile" accept="image/*" required />
-    </div>
+<!--    <div>-->
+<!--        <label for="imageFile">Hình ảnh:</label>-->
+<!--        <input type="file" id="imageFile" name="imageFile" accept="image/*" required />-->
+<!--    </div>-->
 
     <div>
         <label for="quantity">Số lượng:</label>
@@ -43,28 +43,28 @@
     <div>
         <label for="sizes">Kích thước:</label>
         <select id="sizes" multiple th:field="*{sizes}" required>
-            <option th:each="size : ${sizes}" th:value="${size}" th:text="${size.name}"></option>
+            <option th:each="size : ${sizes}" th:value="${size.getId()}" th:text="${size.name}"></option>
         </select>
     </div>
 
     <div>
         <label for="colors">Màu sắc:</label>
         <select id="colors" multiple th:field="*{colors}" required>
-            <option th:each="color : ${colors}" th:value="${color}" th:text="${color.name}"></option>
+            <option th:each="color : ${colors}" th:value="${color.getId()}" th:text="${color.name}"></option>
         </select>
     </div>
 
     <div>
         <label for="materials">Chất liệu:</label>
         <select id="materials" multiple th:field="*{materials}" required>
-            <option th:each="material : ${materials}" th:value="${material}" th:text="${material.name}"></option>
+            <option th:each="material : ${materials}" th:value="${material.getId()}" th:text="${material.name}"></option>
         </select>
     </div>
 
     <div>
         <label for="addons">Phụ kiện:</label>
         <select id="addons" multiple th:field="*{addons}">
-            <option th:each="addon : ${addons}" th:value="${addon}" th:text="${addon.name}"></option>
+            <option th:each="addon : ${addons}" th:value="${addon.getId()}" th:text="${addon.name}"></option>
         </select>
     </div>
 
