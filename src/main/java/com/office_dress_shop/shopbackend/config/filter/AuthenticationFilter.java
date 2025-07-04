@@ -28,19 +28,26 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         HttpSession session = request.getSession(false);
         Account account = session != null ? (Account) session.getAttribute("account") : null;
 
+        // check session
         if (account == null) {
             response.sendRedirect("/error");
             return;
         }
 
-        // Phân quyền customer
-//        if (path.startsWith("/customer/profile") && (account.getRole() == null || !account.getRole().name().equals("CUSTOMER"))) {
+        // has both role
+        if (isBothPath(path) && (account.getRole() == null)) {
+            response.sendRedirect("/error");
+            return;
+        }
+
+        // has customer role
+//        if (isCustomerPath(path) && (account.getRole() == null || !account.getRole().name().equals("CUSTOMER"))) {
 //            response.sendRedirect("/error");
 //            return;
 //        }
 
-        // Phân quyền admin cho
-        if (path.startsWith("/accounts/list") && (account.getRole() == null || !account.getRole().name().equals("ADMIN"))) {
+        // has admin role
+        if (isAdminPath(path) && (account.getRole() == null || !account.getRole().name().equals("ADMIN"))) {
             response.sendRedirect("/error");
             return;
         }
@@ -57,4 +64,25 @@ public class AuthenticationFilter extends OncePerRequestFilter {
                 path.equals("/error") ||
                 path.equals("/home");
     }
+
+    private boolean isBothPath(String path) {
+        return path.startsWith("/profile") ||
+                path.equals("/officedresses");
+
+    }
+
+    public static boolean isAdminPath(String path) {
+        return path.startsWith("/accounts/list") ||
+                path.startsWith("addons") ||
+                path.startsWith("/categories") ||
+                path.startsWith("/colors") ||
+                path.startsWith("/materials") ||
+                path.startsWith("/sizes") ||
+                path.startsWith("/officedresses/");
+    }
+
+//    private boolean isCustomerPath(String path) {
+//        return path.startsWith("/profile");
+//    }
+
 }
