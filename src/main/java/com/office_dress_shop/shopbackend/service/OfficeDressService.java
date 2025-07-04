@@ -1,7 +1,9 @@
 package com.office_dress_shop.shopbackend.service;
 
 import com.office_dress_shop.shopbackend.pojo.OfficeDress;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,4 +12,5 @@ public interface OfficeDressService {
     Optional<OfficeDress> findById(int id);
     OfficeDress save(OfficeDress officeDress);
     void deleteById(int id);
+    Boolean uploadOfficeDress(MultipartFile imageFile, int id) throws IOException;
 }

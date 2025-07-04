@@ -19,7 +19,7 @@ public class OfficeDress {
     @Column(name = "Status", nullable = false)
     private Boolean status;
 
-    @Column(name = "Image_Url", nullable = false)
+    @Column(name = "Image_Url")
     private String imageUrl;
 
     @Column(name = "Quantity", nullable = false)

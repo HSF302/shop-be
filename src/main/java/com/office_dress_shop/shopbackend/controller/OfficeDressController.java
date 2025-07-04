@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -18,12 +19,18 @@ import java.nio.file.Paths;
 @RequestMapping("/officedresses")
 public class OfficeDressController {
 
-    @Autowired private OfficeDressService officeDressService;
-    @Autowired private SizeService sizeService;
-    @Autowired private ColorService colorService;
-    @Autowired private MaterialService materialService;
-    @Autowired private CategoryService categoryService;
-    @Autowired private AddonService addonService;
+    @Autowired
+    private OfficeDressService officeDressService;
+    @Autowired
+    private SizeService sizeService;
+    @Autowired
+    private ColorService colorService;
+    @Autowired
+    private MaterialService materialService;
+    @Autowired
+    private CategoryService categoryService;
+    @Autowired
+    private AddonService addonService;
 
     @GetMapping
     public String listOfficeDresses(Model model) {
@@ -43,19 +50,35 @@ public class OfficeDressController {
     }
 
     @PostMapping("/add")
-    public String addOfficeDress(@ModelAttribute OfficeDress officeDress
-                                 ) throws IOException {
-        officeDress.setImageUrl("hello");
-//        if (!imageFile.isEmpty()) {
-//            String uploadDir = new ClassPathResource("static/images/uploads/").getFile().getAbsolutePath();
-//            String fileName = imageFile.getOriginalFilename();
-//            Path path = Paths.get(uploadDir, fileName);
-//            Files.write(path, imageFile.getBytes());
-//
-//            officeDress.setImageUrl("/images/uploads/" + fileName);
-//        }
+    public String addOfficeDress(@ModelAttribute OfficeDress officeDress) throws IOException {
 
+        officeDress.setStatus(false);
         officeDressService.save(officeDress);
+        int id = officeDress.getId();
+        return "redirect:/officedresses/upload/" + officeDress.getId();
+    }
+
+    @GetMapping("/upload/{id}")
+    public String showUploadForm(@PathVariable int id, Model model) {
+        OfficeDress officeDress = officeDressService.findById(id)
+                .orElseThrow();
+
+        model.addAttribute("officeDress", officeDress); // Add the actual object, not Optional
+        model.addAttribute("dressId", id);
+        return "officedress/upload";
+    }
+
+    @PostMapping("/upload/{id}")
+    public String uploadImage(
+        @PathVariable int id,
+        @RequestParam("imageFile") MultipartFile imageFile,
+        Model model
+    ) throws IOException {
+        Boolean result = officeDressService.uploadOfficeDress(imageFile, id);
+        if (!result) {
+            model.addAttribute("message", "you have not uploaded your image or wrong id");
+            return "officedress/upload";
+        }
         return "redirect:/officedresses";
     }
 
