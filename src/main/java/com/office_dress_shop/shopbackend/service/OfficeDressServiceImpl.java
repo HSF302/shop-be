@@ -1,9 +1,12 @@
 package com.office_dress_shop.shopbackend.service;
 
+import com.office_dress_shop.shopbackend.pojo.Material;
 import com.office_dress_shop.shopbackend.pojo.OfficeDress;
 import com.office_dress_shop.shopbackend.repository.OfficeDressRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,6 +22,13 @@ public class OfficeDressServiceImpl implements OfficeDressService {
 
     @Autowired
     private OfficeDressRepository officeDressRepository;
+
+    public Page<OfficeDress> searchByName(String searchTerm, int page, int size) {
+        if (searchTerm == null || searchTerm.isEmpty()) {
+            return officeDressRepository.findAll(PageRequest.of(page, size));
+        }
+        return officeDressRepository.findByDescriptionContaining(searchTerm, PageRequest.of(page, size));
+    }
 
     @Override
     public List<OfficeDress> findAll() {

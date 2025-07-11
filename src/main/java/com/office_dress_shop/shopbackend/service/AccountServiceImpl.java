@@ -3,6 +3,9 @@ package com.office_dress_shop.shopbackend.service;
 import com.office_dress_shop.shopbackend.pojo.Account;
 import com.office_dress_shop.shopbackend.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +18,16 @@ public class AccountServiceImpl implements AccountService{
     private AccountRepository repo;
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Override
+    public Page<Account> searchByNameOrEmail(String searchTerm, int page, int size) {
+        if (searchTerm == null || searchTerm.isEmpty()) {
+            return repo.findAll(PageRequest.of(page, size));
+        }
+        return repo.findByNameContainingOrEmailContaining(
+                searchTerm, searchTerm, PageRequest.of(page, size)
+        );
+    }
 
     @Override
     public List<Account> findAll() {

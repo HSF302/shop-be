@@ -3,6 +3,7 @@ package com.office_dress_shop.shopbackend.controller;
 import com.office_dress_shop.shopbackend.pojo.*;
 import com.office_dress_shop.shopbackend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,8 +14,22 @@ public class MaterialController {
     @Autowired private MaterialService service;
 
     @GetMapping
-    public String list(Model model) {
-        model.addAttribute("materials", service.findAll());
+    public String list(
+            @RequestParam(required = false) String search,
+            @RequestParam(defaultValue = "0") int page,
+            Model model) {
+
+        // Add search term to model for thymeleaf
+        model.addAttribute("searchTerm", search);
+
+        // Get paginated results (page size 10 by default)
+        Page<Material> materialPage = service.searchByName(search, page, 10);
+
+        // Add to model
+        model.addAttribute("materials", materialPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", materialPage.getTotalPages());
+
         return "material/list";
     }
 

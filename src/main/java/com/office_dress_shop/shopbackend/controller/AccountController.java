@@ -5,6 +5,7 @@ import com.office_dress_shop.shopbackend.pojo.Account;
 import com.office_dress_shop.shopbackend.service.AccountService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,8 +21,22 @@ public class AccountController {
     private PasswordEncoder passwordEncoder;
 
     @GetMapping("/list")
-    public String listAccounts(Model model) {
-        model.addAttribute("accounts", accountService.findAll());
+    public String listAccounts(
+            @RequestParam(required = false) String search,
+            @RequestParam(defaultValue = "0") int page,
+            Model model) {
+
+        // Add search term to model for thymeleaf
+        model.addAttribute("searchTerm", search);
+
+        // Get paginated results (page size 10 by default)
+        Page<Account> accountPage = accountService.searchByNameOrEmail(search, page, 10);
+
+        // Add to model
+        model.addAttribute("accounts", accountPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", accountPage.getTotalPages());
+
         return "account/list";
     }
 
