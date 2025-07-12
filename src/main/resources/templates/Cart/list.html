@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Danh sách Giỏ hàng</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+<h2>Danh sách Giỏ hàng</h2>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Tài khoản</th>
+        <th>Hành động</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="cart : ${carts}">
+        <td th:text="${cart.id}"></td>
+        <td th:text="${cart.account.email}"></td>
+        <td>
+            <a th:href="@{|/carts/${cart.id}|}">Xem</a>
+            <span th:if="${role == 'ADMIN'}">
+                | <a th:href="@{|/cart-items?cartId=${cart.id}|}">Quản lý</a>
+            </span>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

@@ -1,6 +1,7 @@
 package com.office_dress_shop.shopbackend.pojo;
 
 import jakarta.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "Addons")

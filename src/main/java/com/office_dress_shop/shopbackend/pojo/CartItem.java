@@ -2,69 +2,121 @@ package com.office_dress_shop.shopbackend.pojo;
 
 import jakarta.persistence.*;
 
-    @Entity
-    @Table(name = "CartItems")
-    public class CartItem {
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private int id;
+import java.util.ArrayList;
+import java.util.List;
 
-        @ManyToOne
-        @JoinColumn(name = "CartId")
-        private Cart cart;
+@Entity
+@Table(name = "CartItems")
+public class CartItem {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-        @ManyToOne
-        @JoinColumn(name = "ProductId")
-        private OfficeDress product;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CartId", nullable = false)
+    private Cart cart;
 
-        private int quantity;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "ProductId", nullable = false)
+    private OfficeDress product;
 
-        public CartItem() {
-        }
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "SizeId", nullable = false)
+    private Size size;
 
-        public CartItem(Cart cart, OfficeDress product, int quantity) {
-            this.cart = cart;
-            this.product = product;
-            this.quantity = quantity;
-        }
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "ColorId", nullable = false)
+    private Color color;
 
-        public CartItem(int id, Cart cart, OfficeDress product, int quantity) {
-            this.id = id;
-            this.cart = cart;
-            this.product = product;
-            this.quantity = quantity;
-        }
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "MaterialId", nullable = false)
+    private Material material;
 
-        public int getId() {
-            return id;
-        }
+    @ManyToMany
+    @JoinTable(
+            name = "cart_item_addons",
+            joinColumns = @JoinColumn(name = "cart_item_id"),
+            inverseJoinColumns = @JoinColumn(name = "addon_id")
+    )
+    private List<Addon> addons = new ArrayList<>();
 
-        public void setId(int id) {
-            this.id = id;
-        }
+    @Column(name = "Quantity", nullable = false)
+    private int quantity;
 
-        public Cart getCart() {
-            return cart;
-        }
-
-        public void setCart(Cart cart) {
-            this.cart = cart;
-        }
-
-        public OfficeDress getProduct() {
-            return product;
-        }
-
-        public void setProduct(OfficeDress product) {
-            this.product = product;
-        }
-
-        public int getQuantity() {
-            return quantity;
-        }
-
-        public void setQuantity(int quantity) {
-            this.quantity = quantity;
-        }
+    public CartItem() {
     }
 
+    public CartItem(Cart cart, OfficeDress product, Size size, Color color, Material material, List<Addon> addons, int quantity) {
+        this.cart = cart;
+        this.product = product;
+        this.size = size;
+        this.color = color;
+        this.material = material;
+        this.addons = addons;
+        this.quantity = quantity;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Cart getCart() {
+        return cart;
+    }
+
+    public void setCart(Cart cart) {
+        this.cart = cart;
+    }
+
+    public OfficeDress getProduct() {
+        return product;
+    }
+
+    public void setProduct(OfficeDress product) {
+        this.product = product;
+    }
+
+    public Size getSize() {
+        return size;
+    }
+
+    public void setSize(Size size) {
+        this.size = size;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    public Material getMaterial() {
+        return material;
+    }
+
+    public void setMaterial(Material material) {
+        this.material = material;
+    }
+
+    public List<Addon> getAddons() {
+        return addons;
+    }
+
+    public void setAddons(List<Addon> addons) {
+        this.addons = addons;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+}
