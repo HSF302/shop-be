@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Chi tiết Sản phẩm trong Giỏ</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+<h2>Chi tiết Sản phẩm trong Giỏ</h2>
+
+<p><strong>ID:</strong> <span th:text="${cartItem.id}"></span></p>
+<p><strong>Giỏ hàng:</strong> <span th:text="${cartItem.cart.id}"></span></p>
+<p><strong>Sản phẩm:</strong> <span th:text="${cartItem.product.description}"></span></p>
+<p><strong>Kích thước:</strong> <span th:text="${cartItem.size.name}"></span></p>
+<p><strong>Màu sắc:</strong> <span th:text="${cartItem.color.name}"></span></p>
+<p><strong>Chất liệu:</strong> <span th:text="${cartItem.material.name}"></span></p>
+<p><strong>Phụ kiện:</strong>
+<ul>
+    <li th:each="addon : ${cartItem.addons}" th:text="${addon.name}"></li>
+</ul>
+</p>
+<p><strong>Số lượng:</strong> <span th:text="${cartItem.quantity}"></span></p>
+
+<div th:if="${role == 'ADMIN' or cartItem.cart.account.id == session.account.id}">
+    <a th:href="@{|/cart-items/edit/${cartItem.id}|}">Sửa</a> |
+    <a th:href="@{|/cart-items/delete/${cartItem.id}|}" onclick="return confirm('Xóa mục này?')">Xóa</a>
+</div>
+
+<a th:href="@{/cart-items}">Quay lại danh sách</a>
+</body>
+</html>

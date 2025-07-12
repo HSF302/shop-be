@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Danh sách Sản phẩm trong Giỏ</title>
+</head>
+<body>
+<h2>Danh sách Sản phẩm trong Giỏ</h2>
+<p th:if="${selectedCart != null}">
+    Quản lý giỏ hàng của: <strong th:text="${selectedCart.account.email}"></strong>
+</p>
+<p>DEBUG - Role: <span th:text="${role}">null</span></p>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Giỏ hàng</th>
+        <th>Sản phẩm</th>
+        <th>Số lượng</th>
+        <th>Hành động</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="item : ${cartItems}">
+        <td th:text="${item.id}"></td>
+        <td th:text="${item.cart.id}"></td>
+        <td th:text="${item.product.description}"></td>
+        <td th:text="${item.quantity}"></td>
+        <td>
+            <!-- Ai cũng được xem chi tiết -->
+            <a th:href="@{|/cart-items/${item.id}|}">Chi tiết</a>
+
+            <!-- ADMIN: có quyền sửa và xóa -->
+            <span th:if="${role == 'ADMIN'}">
+                | <a th:href="@{|/cart-items/edit/${item.id}|}">Sửa</a>
+                | <a th:href="@{|/cart-items/delete/${item.id}|}" onclick="return confirm('Xóa?')">Xóa</a>
+            </span>
+
+            <!-- CUSTOMER: chỉ được sửa/xóa nếu là cart của mình -->
+            <span th:if="${role == 'CUSTOMER' and item.cart.account.email == session.account.email}">
+                | <a th:href="@{|/cart-items/edit/${item.id}|}">Sửa</a>
+                | <a th:href="@{|/cart-items/delete/${item.id}|}" onclick="return confirm('Xóa?')">Xóa</a>
+            </span>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- Nếu admin đang xem cart cụ thể thì cho thêm vào cart đó -->
+<a th:if="${role == 'ADMIN' and selectedCart != null}"
+   th:href="@{|/cart-items/add?cartId=${selectedCart.id}|}">
+    + Thêm sản phẩm
+</a>
+
+<!-- Nếu là customer, thêm sản phẩm vào giỏ của mình -->
+<a th:if="${role == 'CUSTOMER'}" th:href="@{/cart-items/add}">
+    + Thêm sản phẩm
+</a>
+
+</body>
+</html>
