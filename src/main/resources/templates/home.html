@@ -1,26 +1,70 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Trang chủ</title>
-    <meta charset="UTF-8">
+    <title>Home - Office Dress Shop</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-    <div th:if="${session.account != null}">
-        <h2>Chào mừng, <span th:text="${session.account.email}"></span>!</h2>
-        <p>Vai trò của bạn: <span th:text="${session.account.role}"></span></p>
-
-        <!-- Hiển thị thông tin người dùng và các tùy chọn -->
-        <div>
-            <h3>Chào mừng bạn đến với hệ thống của chúng tôi!</h3>
-            <p>Đây là trang chủ của bạn sau khi đăng nhập thành công.</p>
-            
+    <div class="container mt-4">
+        <!-- User Info -->
+        <div class="mb-4" th:if="${email != null}">
+            <p class="text-end">
+                Welcome, <span th:text="${email}"></span>
+                (<span th:text="${role}"></span>)
+            </p>
         </div>
-        <a href="/accounts/list" class="btn btn-primary">Quản lý tài khoản (Admin)</a>
 
+        <!-- Search Form -->
+        <form th:action="@{/home}" method="get" class="mb-4">
+            <div class="input-group">
+                <input type="text" class="form-control" name="search"
+                       th:value="${searchTerm}" placeholder="Search dresses...">
+                <button class="btn btn-primary" type="submit">Search</button>
+            </div>
+        </form>
+
+        <!-- No Results Message -->
+        <div th:if="${dresses.isEmpty()}" class="alert alert-info">
+            No dresses found matching your search.
+        </div>
+
+        <!-- Product Cards Grid -->
+        <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
+            <div class="col" th:each="dress : ${dresses}">
+                <div class="card h-100">
+                    <img th:if="${dress.imageUrl}" th:src="${dress.imageUrl}" class="card-img-top" alt="Dress Image">
+                    <img th:unless="${dress.imageUrl}" th:src="@{/images/placeholder.jpg}" class="card-img-top" alt="Placeholder">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${dress.description}">Dress Name</h5>
+                        <p class="card-text">
+                            <strong>Price: </strong>
+                            <span th:text="${'$' + #numbers.formatDecimal(dress.basePrice, 0, 'COMMA', 2, 'POINT')}">$0.00</span>
+                        </p>
+                        <div class="d-grid gap-2">
+                            <a th:href="@{/officedresses/{id}(id=${dress.id})}" class="btn btn-primary">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Pagination -->
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center" th:if="${totalPages > 1}">
+                <li class="page-item" th:classappend="${currentPage == 0 ? 'disabled' : ''}">
+                    <a class="page-link" th:href="@{/home(page=${currentPage - 1}, search=${searchTerm})}">&laquo; Previous</a>
+                </li>
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                    th:classappend="${currentPage == i ? 'active' : ''}">
+                    <a class="page-link" th:href="@{/home(page=${i}, search=${searchTerm})}" th:text="${i + 1}"></a>
+                </li>
+                <li class="page-item" th:classappend="${currentPage == totalPages - 1 ? 'disabled' : ''}">
+                    <a class="page-link" th:href="@{/home(page=${currentPage + 1}, search=${searchTerm})}">Next &raquo;</a>
+                </li>
+            </ul>
+        </nav>
     </div>
-    <div th:unless="${session.account != null}">
-        <p>Vui lòng đăng nhập để tiếp tục.</p>
-        <a th:href="@{/auth/login}">Đăng nhập</a>
-    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -59,7 +59,7 @@ public class AuthenticationController {
 
             System.out.println("Account found in session: " + account.getEmail());
 
-            return "redirect:/home";
+            return "redirect:/";
         }
 
         // Move session check after successful authentication

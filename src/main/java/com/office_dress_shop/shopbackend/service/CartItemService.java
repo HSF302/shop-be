@@ -11,4 +11,5 @@ public interface CartItemService {
     Optional<CartItem> findById(int id);
     CartItem save(CartItem cartItem);
     void deleteById(int id);
+    void deleteByCartId(int cartId);
 }

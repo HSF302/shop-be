@@ -28,7 +28,6 @@ public class CartController {
     @GetMapping
     public String list(Model model, HttpSession session) {
         Account acc = (Account) session.getAttribute("account");
-        if (acc == null) return "redirect:/login";
 
         if (acc.getRole() == Role.ADMIN) {
             model.addAttribute("carts", cartService.findAll());
@@ -42,7 +41,6 @@ public class CartController {
     @GetMapping("/{id}")
     public String detail(@PathVariable int id, Model model, HttpSession session) {
         Account acc = (Account) session.getAttribute("account");
-        if (acc == null) return "redirect:/login";
 
         return cartService.findById(id)
                 .filter(cart -> acc.getRole() == Role.ADMIN || cart.getAccount().getId() == acc.getId())

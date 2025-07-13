@@ -13,19 +13,38 @@
 <table border="1">
     <thead>
     <tr>
-        <th>ID</th>
-        <th>Giỏ hàng</th>
+        <th>Hình ảnh</th>
         <th>Sản phẩm</th>
+        <th>Size</th>
+        <th>Màu sắc</th>
+        <th>Chất liệu</th>
+        <th>Phụ kiện</th>
         <th>Số lượng</th>
-        <th>Hành động</th>
+        <th>Giá tiền</th>
+        <th>Thao tác</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="item : ${cartItems}">
-        <td th:text="${item.id}"></td>
-        <td th:text="${item.cart.id}"></td>
+        <td>
+            <img th:src="@{${item.product.imageUrl}}"
+                 alt="Ảnh sản phẩm"
+                 class="img-thumbnail"
+                 style="width: 80px; height: 80px; object-fit: cover;"
+                 onerror="this.src='/images/default-dress.jpg'">
+        </td>
         <td th:text="${item.product.description}"></td>
+        <td th:text="${item.size.name}"></td>
+        <td th:text="${item.color.name}"></td>
+        <td th:text="${item.material.name}"></td>
+        <td>
+            <span th:each="addon : ${item.addons}">
+                <span th:text="${addon.name}"></span>
+                <th:block th:if="${!addonStat.last}">, </th:block>
+            </span>
+        </td>
         <td th:text="${item.quantity}"></td>
+        <td th:text="${#numbers.formatDecimal(item.calculateTotalPrice(), 0, 'COMMA', 0, 'POINT')} + 'đ'"></td>
         <td>
             <!-- Ai cũng được xem chi tiết -->
             <a th:href="@{|/cart-items/${item.id}|}">Chi tiết</a>
@@ -43,6 +62,11 @@
             </span>
         </td>
     </tr>
+    <tr>
+        <td colspan="6" style="text-align: right;"><strong>Tổng cộng:</strong></td>
+        <td th:text="${#numbers.formatDecimal(cartTotal, 0, 'COMMA', 0, 'POINT')} + 'đ'"></td>
+        <td></td>
+    </tr>
     </tbody>
 </table>
 
@@ -56,6 +80,38 @@
 <a th:if="${role == 'CUSTOMER'}" th:href="@{/cart-items/add}">
     + Thêm sản phẩm
 </a>
+<<div th:if="${not #lists.isEmpty(cartItems)}">
+    <form th:action="@{/cart-items/checkout}" method="post" class="mt-4">
+        <div class="form-group">
+            <label for="shippingAddress">Địa chỉ giao hàng:</label>
+            <textarea id="shippingAddress" name="shippingAddress" class="form-control"
+                      rows="3" style="width: 300px;"
+                      th:placeholder="${account.address}"></textarea>
+            <small class="form-text text-muted">
+                Để trống nếu muốn sử dụng địa chỉ mặc định:
+                <span th:text="${account.address}"></span>
+            </small>
+        </div>
+        <button type="submit" class="btn btn-primary mt-2" style="margin-top: 10px;">
+            Thanh toán
+        </button>
+    </form>
+</div>
+<!-- Error message display -->
+<div th:if="${error}" class="alert alert-danger" style="margin: 20px 0; padding: 15px; border-radius: 4px; background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;">
+    <span th:text="${error}"></span>
+    <button type="button" style="float: right; background: none; border: none; font-size: 1.2em; cursor: pointer;" onclick="this.parentElement.style.display='none'">×</button>
+</div>
 
+<!-- Success message display (optional) -->
+<div th:if="${success}" class="alert alert-success" style="margin: 20px 0; padding: 15px; border-radius: 4px; background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb;">
+    <span th:text="${success}"></span>
+    <button type="button" style="float: right; background: none; border: none; font-size: 1.2em; cursor: pointer;" onclick="this.parentElement.style.display='none'">×</button>
+</div>
+
+<div th:if="${#lists.isEmpty(cartItems)}"
+     style="margin-top: 20px; color: #666;">
+    <p>Giỏ hàng trống</p>
+</div>
 </body>
 </html>

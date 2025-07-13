@@ -2,7 +2,8 @@ package com.office_dress_shop.shopbackend.pojo;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "OrderDetails")
@@ -19,43 +20,49 @@ public class OrderDetail {
     @JoinColumn(name = "product_id", nullable = false)
     private OfficeDress product;
 
-    @Column(name = "Quantity", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "size_id")
+    private Size size;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "color_id")
+    private Color color;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "material_id")
+    private Material material;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "order_detail_addons",
+            joinColumns = @JoinColumn(name = "order_detail_id"),
+            inverseJoinColumns = @JoinColumn(name = "addon_id")
+    )
+    private Set<Addon> addons = new HashSet<>();
+
+    @Column(name = "quantity", nullable = false)
     private int quantity;
 
-    @Column(name = "Unit_Price", nullable = false)
+    @Column(name = "unit_price", nullable = false)
     private Double unitPrice;
 
-    @Column(name = "Total_Amount", nullable = false)
+    @Column(name = "total_amount", nullable = false)
     private Double totalAmount;
-
-    @Column(name = "Created_At", nullable = false)
-    private LocalDate createdAt;
-
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDate.now();
-    }
 
     public OrderDetail() {
     }
 
-    public OrderDetail(Order order, OfficeDress product, int quantity, Double unitPrice, Double totalAmount, LocalDate createdAt) {
+    // Constructor for creating from CartItem
+    public OrderDetail(Order order, CartItem cartItem) {
         this.order = order;
-        this.product = product;
-        this.quantity = quantity;
-        this.unitPrice = unitPrice;
-        this.totalAmount = totalAmount;
-        this.createdAt = createdAt;
-    }
-
-    public OrderDetail(int id, Order order, OfficeDress product, int quantity, Double unitPrice, Double totalAmount, LocalDate createdAt) {
-        this.id = id;
-        this.order = order;
-        this.product = product;
-        this.quantity = quantity;
-        this.unitPrice = unitPrice;
-        this.totalAmount = totalAmount;
-        this.createdAt = createdAt;
+        this.product = cartItem.getProduct();
+        this.size = cartItem.getSize();
+        this.color = cartItem.getColor();
+        this.material = cartItem.getMaterial();
+        this.addons.addAll(cartItem.getAddons());
+        this.quantity = cartItem.getQuantity();
+        this.unitPrice = cartItem.calculateTotalPrice() / cartItem.getQuantity();
+        this.totalAmount = cartItem.calculateTotalPrice();
     }
 
     public int getId() {
@@ -82,6 +89,38 @@ public class OrderDetail {
         this.product = product;
     }
 
+    public Size getSize() {
+        return size;
+    }
+
+    public void setSize(Size size) {
+        this.size = size;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    public Material getMaterial() {
+        return material;
+    }
+
+    public void setMaterial(Material material) {
+        this.material = material;
+    }
+
+    public Set<Addon> getAddons() {
+        return addons;
+    }
+
+    public void setAddons(Set<Addon> addons) {
+        this.addons = addons;
+    }
+
     public int getQuantity() {
         return quantity;
     }
@@ -104,13 +143,5 @@ public class OrderDetail {
 
     public void setTotalAmount(Double totalAmount) {
         this.totalAmount = totalAmount;
-    }
-
-    public LocalDate getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDate createdAt) {
-        this.createdAt = createdAt;
     }
 }

@@ -19,6 +19,9 @@ public class Order {
     @Column(name = "OrderStatus", nullable = false)
     private String orderStatus;
 
+    @Column(name = "TotalAmount", nullable = false)
+    private Double totalAmount;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "AccountId", nullable = false)
     private Account account;
@@ -37,18 +40,20 @@ public class Order {
     public Order() {
     }
 
-    public Order(LocalDate orderDate, String orderStatus, Account account, String shippingAddress, List<OrderDetail> orderDetails) {
+    public Order(LocalDate orderDate, String orderStatus, Double totalAmount, Account account, String shippingAddress, List<OrderDetail> orderDetails) {
         this.orderDate = orderDate;
         this.orderStatus = orderStatus;
+        this.totalAmount = totalAmount;
         this.account = account;
         this.shippingAddress = shippingAddress;
         this.orderDetails = orderDetails;
     }
 
-    public Order(int id, LocalDate orderDate, String orderStatus, Account account, String shippingAddress, List<OrderDetail> orderDetails) {
+    public Order(int id, LocalDate orderDate, String orderStatus, Double totalAmount, Account account, String shippingAddress, List<OrderDetail> orderDetails) {
         this.id = id;
         this.orderDate = orderDate;
         this.orderStatus = orderStatus;
+        this.totalAmount = totalAmount;
         this.account = account;
         this.shippingAddress = shippingAddress;
         this.orderDetails = orderDetails;
@@ -100,5 +105,13 @@ public class Order {
 
     public void setOrderDetails(List<OrderDetail> orderDetails) {
         this.orderDetails = orderDetails;
+    }
+
+    public Double getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(Double totalAmount) {
+        this.totalAmount = totalAmount;
     }
 }

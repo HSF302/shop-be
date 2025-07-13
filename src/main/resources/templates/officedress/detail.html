@@ -37,6 +37,7 @@
     <img th:src="@{${officeDress.imageUrl}}" alt="Ảnh sản phẩm" style="max-width: 300px;" />
 </p>
 
+<p><a th:href="@{/cart-items/add(productId=${officeDress.id})}">Thêm vào cart</a></p>
 <p><a th:href="@{/officedresses}">Quay lại danh sách</a></p>
 </body>
 </html>

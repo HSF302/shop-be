@@ -55,19 +55,22 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private boolean isPublicPath(String path) {
-        return path.startsWith("/auth/") ||
-                path.startsWith("/css/") ||
-                path.startsWith("/js/") ||
-                path.startsWith("/images/") ||
-                path.equals("/") ||
-                path.equals("/error") ||
-                path.equals("/home");
-    }
+private boolean isPublicPath(String path) {
+    return path.startsWith("/auth/") ||
+            path.startsWith("/css/") ||
+            path.startsWith("/js/") ||
+            path.startsWith("/images/") ||
+            path.equals("/error") ||
+            path.equals("/officedresses") ||
+            path.matches("/officedresses/\\d+") ||
+            path.matches("/officedresses\\?.+") ||
+            path.equals("/");
+}
 
     private boolean isBothPath(String path) {
         return path.startsWith("/profile") ||
-                path.equals("/officedresses");
+                path.startsWith("/cart-items") ||
+                path.startsWith("/orders");
 
     }
 
@@ -78,7 +81,9 @@ public class AuthenticationFilter extends OncePerRequestFilter {
                 path.startsWith("/colors") ||
                 path.startsWith("/materials") ||
                 path.startsWith("/sizes") ||
-                path.startsWith("/officedresses/");
+                path.startsWith("/carts") ||
+                path.startsWith("/officedresses/")
+                ;
     }
 
 //    private boolean isCustomerPath(String path) {

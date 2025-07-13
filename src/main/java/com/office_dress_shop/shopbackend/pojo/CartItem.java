@@ -119,4 +119,25 @@ public class CartItem {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
+
+    public double calculateTotalPrice() {
+        double basePrice = this.product.getBasePrice();
+        double sizePrice = this.size != null ? this.size.getPrice() : 0;
+        double colorPrice = this.color != null ? this.color.getPrice() : 0;
+        double materialPrice = this.material != null ? this.material.getPrice() : 0;
+
+        // Calculate addons total
+        double addonsPrice = 0;
+        if (this.addons != null) {
+            addonsPrice = this.addons.stream()
+                    .mapToDouble(Addon::getPrice)
+                    .sum();
+        }
+
+        // Calculate total for one item
+        double singleItemPrice = basePrice + sizePrice + colorPrice + materialPrice + addonsPrice;
+
+        // Multiply by quantity
+        return singleItemPrice * this.quantity;
+    }
 }

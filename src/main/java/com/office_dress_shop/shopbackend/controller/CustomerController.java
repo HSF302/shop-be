@@ -1,5 +1,6 @@
 package com.office_dress_shop.shopbackend.controller;
 
+import com.office_dress_shop.shopbackend.enums.Role;
 import com.office_dress_shop.shopbackend.pojo.Account;
 import com.office_dress_shop.shopbackend.service.AccountService;
 import com.office_dress_shop.shopbackend.service.CustomerService;
@@ -24,7 +25,26 @@ public class CustomerController {
         Account account = (Account) session.getAttribute("account");
         Account customerAccount = customerService.findById(account.getId())
                 .orElseThrow();
+        if (account.getRole() == Role.ADMIN) {
+            model.addAttribute("isAdminView", true);
+        }
+        model.addAttribute("isAdminView", false);
         model.addAttribute("account", account);
+        return "customer/profile";
+    }
+
+    @GetMapping("/{id}")
+    public String viewProfileById(@PathVariable Integer id, Model model, HttpSession session) {
+        Account adminAccount = (Account) session.getAttribute("account");
+        if (adminAccount == null || adminAccount.getRole() != Role.ADMIN) {
+            return "redirect:/auth/login";
+        }
+
+        Account customerAccount = customerService.findById(id)
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
+
+        model.addAttribute("account", customerAccount);
+        model.addAttribute("isAdminView", true);
         return "customer/profile";
     }
 
